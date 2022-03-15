@@ -23,6 +23,7 @@ public class Delivery extends TimeStamped {
 
     private LocalTime closingTime;
 
+    @Enumerated(value = EnumType.STRING)
     private Type type;
 
     @OneToOne(fetch = FetchType.LAZY)

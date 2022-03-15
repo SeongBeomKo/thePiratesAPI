@@ -7,7 +7,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 @Getter
-@Valid
 public class DeliveryRequestDto {
 
     @NotBlank(message = "배송 타입은 공백일 수 없습니다.", groups = PostValidationGroup.class)

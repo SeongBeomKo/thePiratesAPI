@@ -123,19 +123,19 @@ public class MainService {
         //당일 마감 시간
         LocalDateTime closingTime = LocalDateTime
                 .of(now.getYear(),
-                        LocalDate.now().getMonth(),
-                        LocalDate.now().getDayOfMonth(),
+                        now.getMonth(),
+                        now.getDayOfMonth(),
                         product.getDelivery().getClosingTime().getHour(),
                         product.getDelivery().getClosingTime().getMinute());
 
         //하루 전 마감시간
         LocalDateTime oneDayBefore = LocalDateTime.from(closingTime).minusDays(1);
-
         // 마감시간 전에 주문했는지 확인
         boolean beforeClosing = now.isBefore(closingTime) && now.isAfter(oneDayBefore);
 
+
         //가장 이른 수령 가능날짜 확인
-        LocalDate startDate = product.getDelivery().getType().getDeliveryDate(beforeClosing);
+        LocalDate startDate = product.getDelivery().getType().getDeliveryDate(beforeClosing, now);
 
         List<DateResponseDto> dateResponseDtos = new ArrayList<>();
         Set<String> holidays = Holidays.holidayArray(String.valueOf(LocalDate.now().getYear()));
@@ -152,7 +152,7 @@ public class MainService {
                     .plusDays(days)
                     .format(DateTimeFormatter.ofPattern("E요일")).equals("토요일")) {
                 days += 2;
-            // 수령 날짜 + days 가 공휴일이면 +1일
+                // 수령 날짜 + days 가 공휴일이면 +1일
             } else if (holidays.contains(
                     LocalDate
                             .from(startDate)

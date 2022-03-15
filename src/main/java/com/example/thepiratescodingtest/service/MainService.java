@@ -116,15 +116,13 @@ public class MainService {
     }
 
     // 수령가능 날짜 조회
-    public List<DateResponseDto> getDeliveryDates(Long id) {
+    public List<DateResponseDto> getDeliveryDates(Long id, LocalDateTime now) {
 
         Product product = productRepository.getById(id);
 
-        LocalDateTime now = LocalDateTime.now();
-
         //당일 마감 시간
         LocalDateTime closingTime = LocalDateTime
-                .of(LocalDate.now().getYear(),
+                .of(now.getYear(),
                         LocalDate.now().getMonth(),
                         LocalDate.now().getDayOfMonth(),
                         product.getDelivery().getClosingTime().getHour(),

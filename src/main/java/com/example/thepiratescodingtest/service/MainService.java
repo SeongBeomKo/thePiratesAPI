@@ -13,6 +13,7 @@ import com.example.thepiratescodingtest.entity.Type;
 import com.example.thepiratescodingtest.repository.DeliveryRepository;
 import com.example.thepiratescodingtest.repository.OptionRepository;
 import com.example.thepiratescodingtest.repository.ProductRepository;
+import com.example.thepiratescodingtest.utility.Holidays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +24,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -34,25 +35,27 @@ public class MainService {
     private final DeliveryRepository deliveryRepository;
     private final ProductRepository productRepository;
 
+    // 상품 목록 조회
     public List<ProductResponseDto> getAllProducts() {
         List<Product> products = productRepository.findAllByOrderByCreatedAtDesc();
         List<ProductResponseDto> productResponseDtos = new ArrayList<>(products.size());
-        for(Product product : products) {
+        for (Product product : products) {
             productResponseDtos.add(
                     ProductResponseDto.builder()
                             .name(product.getProductName())
                             .description(product.getProductDesc())
-                            //포멧터로 바꾸기
-                            .price(String.format("%,d",product.getMin_price()) + " ~")
+                            .price(String.format("%,d", product.getMin_price()) + " ~")
                             .build()
             );
         }
         return productResponseDtos;
     }
 
+    //새 상품 등록
     @Transactional
     public void uploadNewProduct(ProductRequestDto productRequestDto) {
 
+        // 상품 테이블 등록
         Product product = productRepository.save(Product.builder()
                 .productName(productRequestDto.getName())
                 .productDesc(productRequestDto.getDescription())
@@ -61,8 +64,8 @@ public class MainService {
                         .map(OptionRequestDto::getPrice)
                         .min(Integer::compare).get())
                 .build());
-
-        for(OptionRequestDto optionRequestDto : productRequestDto.getOptions()) {
+        // 옵션 테이블 등록
+        for (OptionRequestDto optionRequestDto : productRequestDto.getOptions()) {
             optionRepository.save(Option.builder()
                     .price(optionRequestDto.getPrice())
                     .name(optionRequestDto.getName())
@@ -75,7 +78,7 @@ public class MainService {
         Type type = productRequestDto.getDelivery().getType().equals("fast") ?
                 Type.FAST :
                 Type.REGULAR;
-
+        //배송 테이블 등록
         deliveryRepository.save(Delivery.builder()
                 .price(productRequestDto.getDelivery().getPrice())
                 .closingTime(LocalTime.parse(productRequestDto.getDelivery().getClosing(),
@@ -86,11 +89,13 @@ public class MainService {
         );
     }
 
+    // 상품 삭제
     @Transactional
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
 
+    // 상품 상세 조회
     public ProductInfoResponseDto getProductInfo(Long id) {
         Product product = productRepository.getById(id);
 
@@ -110,12 +115,14 @@ public class MainService {
                 .build();
     }
 
+    // 수령가능 날짜 조회
     public List<DateResponseDto> getDeliveryDates(Long id) {
 
         Product product = productRepository.getById(id);
 
         LocalDateTime now = LocalDateTime.now();
 
+        //당일 마감 시간
         LocalDateTime closingTime = LocalDateTime
                 .of(LocalDate.now().getYear(),
                         LocalDate.now().getMonth(),
@@ -123,18 +130,46 @@ public class MainService {
                         product.getDelivery().getClosingTime().getHour(),
                         product.getDelivery().getClosingTime().getMinute());
 
+        //하루 전 마감시간
         LocalDateTime oneDayBefore = LocalDateTime.from(closingTime).minusDays(1);
 
+        // 마감시간 전에 주문했는지 확인
         boolean beforeClosing = now.isBefore(closingTime) && now.isAfter(oneDayBefore);
 
+        //가장 이른 수령 가능날짜 확인
         LocalDate startDate = product.getDelivery().getType().getDeliveryDate(beforeClosing);
 
-        return IntStream.rangeClosed(0, 4)
-                .boxed()
-                .map(p -> new DateResponseDto(
-                        LocalDate.from(startDate)
-                                .plusDays(p)
-                                .toString()))
-                .collect(Collectors.toList());
+        List<DateResponseDto> dateResponseDtos = new ArrayList<>();
+        Set<String> holidays = Holidays.holidayArray(String.valueOf(LocalDate.now().getYear()));
+        int days = 0;
+        // 수령 가능날짜 5개 선별
+        while (dateResponseDtos.size() < 5) {
+//            System.out.println(LocalDate
+//                    .from(startDate)
+//                    .plusDays(days)
+//                    .toString()
+//                    .replaceAll("-", ""));
+            // 수령 날짜 + days 가 토요일이면 +2일
+            if (LocalDate.from(startDate)
+                    .plusDays(days)
+                    .format(DateTimeFormatter.ofPattern("E요일")).equals("토요일")) {
+                days += 2;
+            // 수령 날짜 + days 가 공휴일이면 +1일
+            } else if (holidays.contains(
+                    LocalDate
+                            .from(startDate)
+                            .plusDays(days)
+                            .toString()
+                            .replaceAll("-", ""))) {
+                days++;
+            } else {
+                dateResponseDtos.add(new DateResponseDto(LocalDate
+                        .from(startDate)
+                        .plusDays(days)
+                        .format(DateTimeFormatter.ofPattern("MM월 dd일 E요일"))));
+                days++;
+            }
+        }
+        return dateResponseDtos;
     }
 }

@@ -166,4 +166,19 @@ public class Holidays {
         holidaysSet.addAll(extraHoliday);
     }
 
+    public static LocalDate weekendOrHoliday(LocalDate startDay) {
+        //가장 빠르게 수령 가능 한 날짜가 주말이면 (토요일 + 2일 / 일요일 + 1일)
+        if(startDay.getDayOfWeek().toString().equals("SUNDAY")) {
+            startDay = LocalDate.from(startDay).plusDays(1);
+        } else if(startDay.getDayOfWeek().toString().equals("SATURDAY")) {
+            startDay = LocalDate.from(startDay).plusDays(2);
+
+        }
+        //가장 빠르게 수령 가능 한 날짜가 공휴일이면 + 1일 (추석/설날 처럼 연달아 쉬는날이 있기 때문에 while loop)
+        while(Holidays.holidayArray(String.valueOf(LocalDate.now().getYear()))
+                .contains(startDay.toString().replaceAll("-", ""))) {
+            startDay = LocalDate.from(startDay).plusDays(1);
+        }
+        return startDay;
+    }
 }

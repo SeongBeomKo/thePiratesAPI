@@ -131,7 +131,9 @@ public class MainService {
         //하루 전 마감시간
         LocalDateTime oneDayBefore = LocalDateTime.from(closingTime).minusDays(1);
         // 마감시간 전에 주문했는지 확인
-        boolean beforeClosing = now.isBefore(closingTime) && now.isAfter(oneDayBefore);
+        boolean beforeClosing =
+                Holidays.weekendOrHoliday(now.toLocalDate()).equals(now.toLocalDate()) ?
+                now.isBefore(closingTime) && now.isAfter(oneDayBefore) : true;
 
 
         //가장 이른 수령 가능날짜 확인
@@ -142,11 +144,6 @@ public class MainService {
         int days = 0;
         // 수령 가능날짜 5개 선별
         while (dateResponseDtos.size() < 5) {
-//            System.out.println(LocalDate
-//                    .from(startDate)
-//                    .plusDays(days)
-//                    .toString()
-//                    .replaceAll("-", ""));
             // 수령 날짜 + days 가 토요일이면 +2일
             if (LocalDate.from(startDate)
                     .plusDays(days)

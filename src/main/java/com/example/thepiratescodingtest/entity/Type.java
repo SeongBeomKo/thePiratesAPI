@@ -28,35 +28,20 @@ public enum Type {
 
         LocalDate startDay = now.toLocalDate();
         // 현재 요청 당일이 주말 혹은 공휴일 인지 확인
-        startDay = weekendOrHoliday(startDay);
+        startDay = Holidays.weekendOrHoliday(startDay);
         // 오늘 날짜기준으로 마감시간 전에 시켰으면 + 0, 마김시간 후에 시켰으면 + 1
         startDay = LocalDate.from(startDay).plusDays(plusDay1);
         // 다시 주말 혹은 공휴일 인지 확인
-        startDay = weekendOrHoliday(startDay);
+        startDay = Holidays.weekendOrHoliday(startDay);
         // 익일 배송이면 + 1, 당일 배송이면 + 0
         startDay = LocalDate.from(startDay).plusDays(plusDay2);
         // 다시 주말 혹은 공휴일 인지 확인
-        startDay = weekendOrHoliday(startDay);
+        startDay = Holidays.weekendOrHoliday(startDay);
         // 수령일 = 배송 가능일 + 1
         startDay = LocalDate.from(startDay).plusDays(1);
         // 다시 주말 혹은 공휴일 인지 확인
-        startDay = weekendOrHoliday(startDay);
+        startDay = Holidays.weekendOrHoliday(startDay);
 
         return startDay;
     }
-
-    public LocalDate weekendOrHoliday(LocalDate startDay) {
-        //가장 빠르게 수령 가능 한 날짜가 주말이면 (토요일 + 2일 / 일요일 + 1일)
-        if(startDay.getDayOfWeek().toString().equals("SUNDAY")) {
-            startDay = LocalDate.from(startDay).plusDays(1);
-        } else if(startDay.getDayOfWeek().toString().equals("SATURDAY")) {
-            startDay = LocalDate.from(startDay).plusDays(2);
-            //가장 빠르게 수령 가능 한 날짜가 공휴일이면 + 1일
-        } else if(Holidays.holidayArray(String.valueOf(LocalDate.now().getYear()))
-                .contains(startDay.toString().replaceAll("-", ""))) {
-            startDay = LocalDate.from(startDay).plusDays(1);
-        }
-        return startDay;
-    }
-
 }

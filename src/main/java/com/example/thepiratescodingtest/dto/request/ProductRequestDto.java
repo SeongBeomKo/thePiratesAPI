@@ -1,12 +1,18 @@
 package com.example.thepiratescodingtest.dto.request;
 
 import com.example.thepiratescodingtest.exception.PostValidationGroup;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter
 public class ProductRequestDto {
 

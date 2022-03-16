@@ -46,7 +46,8 @@ public class Holidays {
 
         int y = solar.getYear();
         int m = solar.getMonth().getValue();
-        int d = solar.getDayOfMonth();
+        // 안맞는 부분 조정
+        int d = solar.plusDays(1).getDayOfMonth();
 
         StringBuilder ret = new StringBuilder();
         ret.append(String.format("%04d", y));
@@ -73,7 +74,7 @@ public class Holidays {
         holidaysSet.add(yyyy+"1225");   // 성탄절
 
         // 음력 휴일
-
+        String lastYear = String.valueOf(Integer.parseInt(yyyy) + 1);
         String prev_seol = LocalDate.parse(Lunar2Solar(yyyy+"0101"), formatter).minusDays(1).toString().replace("-","");
         holidaysSet.add(yyyy+prev_seol.substring(4));        // ""
         holidaysSet.add(yyyy+SolarDays(yyyy, "0101"));  // 설날
@@ -86,7 +87,7 @@ public class Holidays {
 
         try {
             // 설날 대체공휴일 검사
-            String lastYear = String.valueOf(Integer.parseInt(yyyy) + 1);
+
             if(LocalDate.parse(Lunar2Solar(lastYear+"1231"),formatter).getDayOfWeek().getValue() == LD_SUNDAY) {    // 일
                 holidaysSet.add(Lunar2Solar(yyyy+"0103"));
             }
@@ -175,8 +176,8 @@ public class Holidays {
 
         }
         //가장 빠르게 수령 가능 한 날짜가 공휴일이면 + 1일 (추석/설날 처럼 연달아 쉬는날이 있기 때문에 while loop)
-        while(Holidays.holidayArray(String.valueOf(LocalDate.now().getYear()))
-                .contains(startDay.toString().replaceAll("-", ""))) {
+        Set<String> holidays = Holidays.holidayArray(String.valueOf(LocalDate.now().getYear()));
+        while(holidays.contains(startDay.toString().replaceAll("-", ""))) {
             startDay = LocalDate.from(startDay).plusDays(1);
         }
         return startDay;

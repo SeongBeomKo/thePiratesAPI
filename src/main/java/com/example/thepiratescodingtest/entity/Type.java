@@ -39,8 +39,7 @@ public enum Type {
         startDay = Holidays.weekendOrHoliday(startDay);
         // 수령일 = 배송 가능일 + 1
         startDay = LocalDate.from(startDay).plusDays(1);
-        // 다시 주말 혹은 공휴일 인지 확인
-        startDay = Holidays.weekendOrHoliday(startDay);
+
 
         return startDay;
     }

@@ -130,7 +130,8 @@ public class MainService {
 
         //하루 전 마감시간
         LocalDateTime oneDayBefore = LocalDateTime.from(closingTime).minusDays(1);
-        // 마감시간 전에 주문했는지 확인
+        // 요청 시 주말 혹은 공휴일이면 발송 가능일 까지 ++ 후 마감시간 전으로 표시(true)
+        // 요청시 발송 가능일이라면 마감시간 전에 주문했는지 확인 후 표시
         boolean beforeClosing =
                 Holidays.weekendOrHoliday(now.toLocalDate()).equals(now.toLocalDate()) ?
                 now.isBefore(closingTime) && now.isAfter(oneDayBefore) : true;
@@ -144,26 +145,11 @@ public class MainService {
         int days = 0;
         // 수령 가능날짜 5개 선별
         while (dateResponseDtos.size() < 5) {
-            // 수령 날짜 + days 가 토요일이면 +2일
-            if (LocalDate.from(startDate)
-                    .plusDays(days)
-                    .format(DateTimeFormatter.ofPattern("E요일")).equals("토요일")) {
-                days += 2;
-                // 수령 날짜 + days 가 공휴일이면 +1일
-            } else if (holidays.contains(
-                    LocalDate
-                            .from(startDate)
-                            .plusDays(days)
-                            .toString()
-                            .replaceAll("-", ""))) {
-                days++;
-            } else {
                 dateResponseDtos.add(new DateResponseDto(LocalDate
                         .from(startDate)
                         .plusDays(days)
                         .format(DateTimeFormatter.ofPattern("MM월 dd일 E요일"))));
                 days++;
-            }
         }
         return dateResponseDtos;
     }

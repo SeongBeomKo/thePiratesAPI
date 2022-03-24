@@ -47,7 +47,7 @@ public class Holidays {
         int y = solar.getYear();
         int m = solar.getMonth().getValue();
         // 안맞는 부분 조정
-        int d = solar.plusDays(1).getDayOfMonth();
+        int d = solar.getDayOfMonth();
 
         StringBuilder ret = new StringBuilder();
         ret.append(String.format("%04d", y));

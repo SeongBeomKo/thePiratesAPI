@@ -40,7 +40,6 @@ public enum Type {
         // 수령일 = 배송 가능일 + 1
         startDay = LocalDate.from(startDay).plusDays(1);
 
-
         return startDay;
     }
 }

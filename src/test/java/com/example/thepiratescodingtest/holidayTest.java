@@ -545,11 +545,11 @@ public class holidayTest {
         for(DateResponseDto dto : dateResponseDtos2) {
             System.out.println(dto.getDate());
         }
-//        assertEquals("03월 10일 목요일", dateResponseDtos2.get(0).getDate());
-//        assertEquals("03월 11일 금요일", dateResponseDtos2.get(1).getDate());
-//        assertEquals("03월 12일 토요일", dateResponseDtos2.get(2).getDate());
-//        assertEquals("03월 13일 일요일", dateResponseDtos2.get(3).getDate());
-//        assertEquals("03월 14일 월요일", dateResponseDtos2.get(4).getDate());
+        assertEquals("03월 10일 목요일", dateResponseDtos2.get(0).getDate());
+        assertEquals("03월 11일 금요일", dateResponseDtos2.get(1).getDate());
+        assertEquals("03월 12일 토요일", dateResponseDtos2.get(2).getDate());
+        assertEquals("03월 13일 일요일", dateResponseDtos2.get(3).getDate());
+        assertEquals("03월 14일 월요일", dateResponseDtos2.get(4).getDate());
         System.out.println();
     }
 
@@ -625,11 +625,11 @@ public class holidayTest {
         for(DateResponseDto dto : dateResponseDtos2) {
             System.out.println(dto.getDate());
         }
-//        assertEquals("03월 04일 금요일", dateResponseDtos2.get(0).getDate());
-//        assertEquals("03월 05일 토요일", dateResponseDtos2.get(1).getDate());
-//        assertEquals("03월 06일 일요일", dateResponseDtos2.get(2).getDate());
-//        assertEquals("03월 07일 월요일", dateResponseDtos2.get(3).getDate());
-//        assertEquals("03월 08일 화요일", dateResponseDtos2.get(4).getDate());
+        assertEquals("03월 04일 금요일", dateResponseDtos2.get(0).getDate());
+        assertEquals("03월 05일 토요일", dateResponseDtos2.get(1).getDate());
+        assertEquals("03월 06일 일요일", dateResponseDtos2.get(2).getDate());
+        assertEquals("03월 07일 월요일", dateResponseDtos2.get(3).getDate());
+        assertEquals("03월 08일 화요일", dateResponseDtos2.get(4).getDate());
         System.out.println();
     }
 

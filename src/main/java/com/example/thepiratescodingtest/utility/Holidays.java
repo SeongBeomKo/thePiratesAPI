@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,12 +43,17 @@ public class Holidays {
         cc.set(ChineseCalendar.MONTH, Integer.parseInt(date.substring(4, 6)) - 1);              // 월, month -1
         cc.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(date.substring(6)));              // 일
 
-        LocalDate solar = Instant.ofEpochMilli(cc.getTimeInMillis()).atZone(ZoneId.of("UTC")).toLocalDate();
+        //LocalDate solar = Instant.ofEpochMilli(cc.getTimeInMillis()).atZone(ZoneId.of("UTC")).toLocalDate();
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(cc.getTimeInMillis());
 
-        int y = solar.getYear();
-        int m = solar.getMonth().getValue();
-        // 안맞는 부분 조정
-        int d = solar.getDayOfMonth();
+//        int y = solar.getYear();
+//        int m = solar.getMonth().getValue();
+//        // 안맞는 부분 조정
+//        int d = solar.plusDays(1).getDayOfMonth();
+        int y = cal.get(Calendar.YEAR);
+        int m = cal.get(Calendar.MONTH) + 1;
+        int d = cal.get(Calendar.DAY_OF_MONTH);
 
         StringBuilder ret = new StringBuilder();
         ret.append(String.format("%04d", y));
@@ -176,7 +182,8 @@ public class Holidays {
 
         }
         //가장 빠르게 수령 가능 한 날짜가 공휴일이면 + 1일 (추석/설날 처럼 연달아 쉬는날이 있기 때문에 while loop)
-        Set<String> holidays = Holidays.holidayArray(String.valueOf(LocalDate.now().getYear()));
+        Set<String> holidays = Holidays.holidayArray(String.valueOf(LocalDate.now().minusDays(2).getYear()));
+        System.out.println(holidays);
         while(holidays.contains(startDay.toString().replaceAll("-", ""))) {
             startDay = LocalDate.from(startDay).plusDays(1);
         }

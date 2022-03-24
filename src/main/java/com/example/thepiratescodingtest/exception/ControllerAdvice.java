@@ -26,16 +26,6 @@ public class ControllerAdvice {
                 e.getMessage());
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorResult> userExResolver(HttpServletRequest request,
-                                                      HttpServletResponse response,
-                                                      UserException exception) {
-        ErrorResult errorResult = new ErrorResult(
-                HttpStatus.BAD_REQUEST,
-                exception.getMessage());
-        return new ResponseEntity<>(errorResult, HttpStatus.NOT_FOUND);
-    }
-
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "error.bad")
     public class BadRequestException extends RuntimeException{
     }

@@ -26,6 +26,6 @@ public class Delivery extends TimeStamped {
     @Enumerated(value = EnumType.STRING)
     private Type type;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "delivery")
     private Product product;
 }

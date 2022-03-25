@@ -28,7 +28,7 @@ public class Product extends TimeStamped {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Option> optionList;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 

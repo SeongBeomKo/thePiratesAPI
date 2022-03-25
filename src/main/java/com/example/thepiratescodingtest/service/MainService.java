@@ -55,6 +55,18 @@ public class MainService {
     @Transactional
     public void uploadNewProduct(ProductRequestDto productRequestDto) {
 
+        Type type = productRequestDto.getDelivery().getType().equals("fast") ?
+                Type.FAST :
+                Type.REGULAR;
+        //배송 테이블 등록
+        Delivery delivery = deliveryRepository.save(Delivery.builder()
+                .price(productRequestDto.getDelivery().getPrice())
+                .closingTime(LocalTime.parse(productRequestDto.getDelivery().getClosing(),
+                        DateTimeFormatter.ofPattern("H:mm")))
+                .type(type)
+                .build()
+        );
+
         // 상품 테이블 등록
         Product product = productRepository.save(Product.builder()
                 .productName(productRequestDto.getName())
@@ -63,6 +75,7 @@ public class MainService {
                         .stream()
                         .map(OptionRequestDto::getPrice)
                         .min(Integer::compare).get())
+                .delivery(delivery)
                 .build());
         // 옵션 테이블 등록
         for (OptionRequestDto optionRequestDto : productRequestDto.getOptions()) {
@@ -74,19 +87,6 @@ public class MainService {
                     .build()
             );
         }
-
-        Type type = productRequestDto.getDelivery().getType().equals("fast") ?
-                Type.FAST :
-                Type.REGULAR;
-        //배송 테이블 등록
-        deliveryRepository.save(Delivery.builder()
-                .price(productRequestDto.getDelivery().getPrice())
-                .closingTime(LocalTime.parse(productRequestDto.getDelivery().getClosing(),
-                        DateTimeFormatter.ofPattern("H:mm")))
-                .type(type)
-                .product(product)
-                .build()
-        );
     }
 
     // 상품 삭제

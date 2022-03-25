@@ -57,7 +57,7 @@ public class holidayTest {
                 .id(1L)
                 .productName("고등어")
                 .productDesc("갓 잡은 싱싱한 고등어")
-                .min_price(10000)
+                .minPrice(10000)
                 .delivery(deliveryFast)
                 .build();
 
@@ -65,7 +65,7 @@ public class holidayTest {
                 .id(2L)
                 .productName("갈치")
                 .productDesc("갓 잡은 싱싱한 갈치")
-                .min_price(11000)
+                .minPrice(11000)
                 .delivery(deliveryRegular)
                 .build();
 

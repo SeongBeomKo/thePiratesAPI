@@ -183,7 +183,6 @@ public class Holidays {
         }
         //가장 빠르게 수령 가능 한 날짜가 공휴일이면 + 1일 (추석/설날 처럼 연달아 쉬는날이 있기 때문에 while loop)
         Set<String> holidays = Holidays.holidayArray(String.valueOf(LocalDate.now().minusDays(2).getYear()));
-        System.out.println(holidays);
         while(holidays.contains(startDay.toString().replaceAll("-", ""))) {
             startDay = LocalDate.from(startDay).plusDays(1);
         }

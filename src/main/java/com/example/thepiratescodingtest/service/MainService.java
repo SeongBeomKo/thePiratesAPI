@@ -44,7 +44,7 @@ public class MainService {
                     ProductResponseDto.builder()
                             .name(product.getProductName())
                             .description(product.getProductDesc())
-                            .price(String.format("%,d", product.getMin_price()) + " ~")
+                            .price(String.format("%,d", product.getMinPrice()) + " ~")
                             .build()
             );
         }
@@ -71,7 +71,7 @@ public class MainService {
         Product product = productRepository.save(Product.builder()
                 .productName(productRequestDto.getName())
                 .productDesc(productRequestDto.getDescription())
-                .min_price(productRequestDto.getOptions()
+                .minPrice(productRequestDto.getOptions()
                         .stream()
                         .map(OptionRequestDto::getPrice)
                         .min(Integer::compare).get())
@@ -133,8 +133,8 @@ public class MainService {
         // 요청 시 주말 혹은 공휴일이면 발송 가능일 까지 ++ 후 마감시간 전으로 표시(true)
         // 요청시 발송 가능일이라면 마감시간 전에 주문했는지 확인 후 표시
         boolean beforeClosing =
-                Holidays.weekendOrHoliday(now.toLocalDate()).equals(now.toLocalDate()) ?
-                now.isBefore(closingTime) && now.isAfter(oneDayBefore) : true;
+                !Holidays.weekendOrHoliday(now.toLocalDate()).equals(now.toLocalDate())
+                        || now.isBefore(closingTime) && now.isAfter(oneDayBefore);
 
 
         //가장 이른 수령 가능날짜 확인

@@ -23,11 +23,13 @@ public class Product extends TimeStamped {
 
     private String productDesc;
 
-    private int min_price;
+    private int minPrice;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Option> optionList;
 
+    // 연관관계 주인이 아닌쪽에서 호출해도 lazy로 로딩
+    @MapsId
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;

@@ -370,11 +370,11 @@ public class holidayTest {
         for(DateResponseDto dto : dateResponseDtos) {
             System.out.println(dto.getDate());
         }
-//        assertEquals("03월 11일 금요일", dateResponseDtos.get(0).getDate());
-//        assertEquals("03월 12일 토요일", dateResponseDtos.get(1).getDate());
-//        assertEquals("03월 13일 일요일", dateResponseDtos.get(2).getDate());
-//        assertEquals("03월 14일 월요일", dateResponseDtos.get(3).getDate());
-//        assertEquals("03월 15일 화요일", dateResponseDtos.get(4).getDate());
+        assertEquals("03월 11일 금요일", dateResponseDtos.get(0).getDate());
+        assertEquals("03월 12일 토요일", dateResponseDtos.get(1).getDate());
+        assertEquals("03월 13일 일요일", dateResponseDtos.get(2).getDate());
+        assertEquals("03월 14일 월요일", dateResponseDtos.get(3).getDate());
+        assertEquals("03월 15일 화요일", dateResponseDtos.get(4).getDate());
         System.out.println();
 
         System.out.println("3/9 수요일, 마감시간 후 익일배송일 경우");
@@ -385,11 +385,11 @@ public class holidayTest {
         for(DateResponseDto dto : dateResponseDtos2) {
             System.out.println(dto.getDate());
         }
-//        assertEquals("03월 14일 월요일", dateResponseDtos2.get(0).getDate());
-//        assertEquals("03월 15일 화요일", dateResponseDtos2.get(1).getDate());
-//        assertEquals("03월 16일 수요일", dateResponseDtos2.get(2).getDate());
-//        assertEquals("03월 17일 목요일", dateResponseDtos2.get(3).getDate());
-//        assertEquals("03월 18일 금요일", dateResponseDtos2.get(4).getDate());
+        assertEquals("03월 12일 토요일", dateResponseDtos2.get(0).getDate());
+        assertEquals("03월 13일 일요일", dateResponseDtos2.get(1).getDate());
+        assertEquals("03월 14일 월요일", dateResponseDtos2.get(2).getDate());
+        assertEquals("03월 15일 화요일", dateResponseDtos2.get(3).getDate());
+        assertEquals("03월 16일 수요일", dateResponseDtos2.get(4).getDate());
         System.out.println();
     }
 
